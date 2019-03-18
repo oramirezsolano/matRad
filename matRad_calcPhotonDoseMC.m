@@ -1,4 +1,4 @@
-function dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst,nCasePerBixel,visBool)
+function dij = matRad_calcPhotonDoseMC(file,ct,stf,pln,cst,nCasePerBixel,visBool)
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % matRad ompMC monte carlo photon dose calculation wrapper
 %
@@ -33,12 +33,12 @@ function dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst,nCasePerBixel,visBool)
 tic
 
 % disable visualiazation by default
-if nargin < 6
+if nargin < 7 % 6
     visBool = false;
 end
 
-if nargin < 5
-    nCasePerBixel = 100000;
+if nargin < 6 % 5
+    nCasePerBixel = 10000; % 100000
 end
 
 fileFolder = fileparts(mfilename('fullpath'));
@@ -277,6 +277,11 @@ ompMCgeo.xBounds = (dij.doseGrid.resolution.y * (0.5 + [0:dij.doseGrid.dimension
 ompMCgeo.yBounds = (dij.doseGrid.resolution.x * (0.5 + [0:dij.doseGrid.dimensions(2)])) ./ scale;
 ompMCgeo.zBounds = (dij.doseGrid.resolution.z * (0.5 + [0:dij.doseGrid.dimensions(3)])) ./ scale;
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writePhantomMCRes(dij,material,ompMCgeo.xBounds,ompMCgeo.yBounds,ompMCgeo.zBounds,cubeRho,cubeMatIx,file);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %% debug visualization
 if visBool
     
@@ -374,6 +379,39 @@ ompMCsource.zSide1 = bixelSide1(:,3);
 ompMCsource.xSide2 = bixelSide2(:,2);
 ompMCsource.ySide2 = bixelSide2(:,1);
 ompMCsource.zSide2 = bixelSide2(:,3);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+writeBeamletfileMCRes(file,ompMCsource.nBeams,ompMCsource.nBixels,beamSource,ompMCsource.iBeam,bixelCorner,bixelSide1,bixelSide2);
+% outputname = strtok(file,'.mat');
+% ext = '.beamlet';
+% 
+% fileID = fopen(strcat(outputname,ext),'w');
+% 
+% % Source position (x, y, z):
+% fprintf(fileID, '%d %d ', ompMCsource.nBeams, ompMCsource.nBixels);
+% fprintf(fileID, '\n');
+% for i = 1:ompMCsource.nBeams
+%     fprintf(fileID, '%f ', beamSource(i,1));
+%     fprintf(fileID, '%f ', beamSource(i,2));
+%     fprintf(fileID, '%f ', beamSource(i,3));  
+%     fprintf(fileID, '\n');
+% end
+% for i = 1:ompMCsource.nBixels    
+%     fprintf(fileID, '%d ', ompMCsource.iBeam(i)-1);  
+%     fprintf(fileID, '%f ', bixelCorner(i,1));
+%     fprintf(fileID, '%f ', bixelCorner(i,2));
+%     fprintf(fileID, '%f ', bixelCorner(i,3));
+%     fprintf(fileID, '%f ', bixelSide1(i,1));
+%     fprintf(fileID, '%f ', bixelSide1(i,2));
+%     fprintf(fileID, '%f ', bixelSide1(i,3));
+%     fprintf(fileID, '%f ', bixelSide2(i,1));
+%     fprintf(fileID, '%f ', bixelSide2(i,2));
+%     fprintf(fileID, '%f ', bixelSide2(i,3));
+%     fprintf(fileID, '\n');
+% end
+% 
+% fclose(fileID);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if visBool
     plot3(ompMCsource.ySource,ompMCsource.xSource,ompMCsource.zSource,'rx')

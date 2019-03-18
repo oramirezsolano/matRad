@@ -1,4 +1,4 @@
 [submodule "submodules/ompMC"]
-	path = ../ompMC
-	url = https://github.com/oramirezsolano/ompMC.git
+	path = submodules/ompMC
+	url = https://github.com/e0404/ompMC
 	branch = dev_parallel
