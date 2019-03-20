@@ -1,11 +1,26 @@
 function writeBeamletfileMCRes(file,nBeams,nBixels,beamSource,iBeam,bixelCorner,bixelSide1,bixelSide2)
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% matRad ompMC monte carlo beamlet file creator
+% 
+% call
+%   writeBeamletfileMCRes(file,ompMCsource.nBeams,ompMCsource.nBixels,beamSource,ompMCsource.iBeam,bixelCorner,bixelSide1,bixelSide2);
+% 
+% input
+%   file:           variable with the .mat file's name
+%   nBeams:         total number of beams
+%   nBixels:        total number of bixels/beamlets
+%   beamSource:     x,y,z coordinates of the source for each bixel
+%   iBeam:          number os beam por each bixel (index)
+%   bixelCorner:    x,y,z coordinates of one corner for each bixel
+%   bixelSide1 & 2: x,y,z coordinates of one corner for each bixel
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 outputname = strtok(file,'.mat');
 ext = '.beamlet';
 
 fileID = fopen(strcat(outputname,ext),'w');
 
-% Source position (x, y, z):
+% writing the geometry in a .beamlet file ext.
 fprintf(fileID, '%d %d ', nBeams, nBixels);
 fprintf(fileID, '\n');
 for i = 1:nBeams

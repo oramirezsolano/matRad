@@ -1,6 +1,20 @@
-function writePhantomMCRes(dij,material,xBounds,yBounds,zBounds,ctcubeP,cubeMatIx,file)
+function writePhantomMCRes(dij,material,xBounds,yBounds,zBounds,ctcubeRho,cubeMatIx,file)
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% matRad ompMC monte carlo phantom file creator
+% 
+% call
+%   writePhantomMCRes(dij,material,ompMCgeo.xBounds,ompMCgeo.yBounds,ompMCgeo.zBounds,cubeRho,cubeMatIx,file);
+% 
+% input
+%   dij:            matRad dij struct
+%   material:       number and names of material
+%   x,y,zBounds:    x,y,z coordinates of ct's voxel boundaries
+%   ctcubeRho:      values of ct material densities
+%   cubeMatIx:      material index
+%   file:           variable with the .mat file's name
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%% Writing the egsphant
+% Writing the egsphant
 outputname = strtok(file,'.mat');
 ext = '.egsphant';
 fileID = fopen(strcat(outputname,ext),'w');
@@ -26,7 +40,6 @@ for z = 1:dij.doseGrid.dimensions(3)
     for x = 1:dij.doseGrid.dimensions(1)
         for y = 1:dij.doseGrid.dimensions(2)
                 fprintf(fileID, '%d', cubeMatIx{1}(x,y,z));
-%             end
         end
         fprintf(fileID, '\n');
     end
@@ -40,7 +53,7 @@ for z = 1:dij.doseGrid.dimensions(3)
     waitbar(z/dij.doseGrid.dimensions(3),h3,sprintf('Slice: %d/%d',z,dij.doseGrid.dimensions(3)))
     for x = 1:dij.doseGrid.dimensions(1)
         for y = 1:dij.doseGrid.dimensions(2)
-            fprintf(fileID,'%f\t',ctcubeP{1}(x,y,z));
+            fprintf(fileID,'%f\t',ctcubeRho{1}(x,y,z));
         end
         fprintf(fileID, '\n');
     end
