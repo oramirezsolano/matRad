@@ -37,8 +37,8 @@ h2 = waitbar(0,'1','Name','Writing number of material');
 
 for z = 1:dij.doseGrid.dimensions(3)
     waitbar(z/dij.doseGrid.dimensions(3),h2,sprintf('Slice: %d/%d',z,dij.doseGrid.dimensions(3)))
-    for x = 1:dij.doseGrid.dimensions(1)
-        for y = 1:dij.doseGrid.dimensions(2)
+    for y = 1:dij.doseGrid.dimensions(1)
+        for x = 1:dij.doseGrid.dimensions(2)
                 fprintf(fileID, '%d', cubeMatIx{1}(x,y,z));
         end
         fprintf(fileID, '\n');
@@ -51,8 +51,8 @@ h3 = waitbar(0,'1','Name','Writing density of material');
 
 for z = 1:dij.doseGrid.dimensions(3)
     waitbar(z/dij.doseGrid.dimensions(3),h3,sprintf('Slice: %d/%d',z,dij.doseGrid.dimensions(3)))
-    for x = 1:dij.doseGrid.dimensions(1)
-        for y = 1:dij.doseGrid.dimensions(2)
+    for y = 1:dij.doseGrid.dimensions(1)
+        for x = 1:dij.doseGrid.dimensions(2)
             fprintf(fileID,'%f\t',ctcubeRho{1}(x,y,z));
         end
         fprintf(fileID, '\n');

@@ -44,9 +44,9 @@ noObjOrConst = all(cellfun(@isempty,cst(:,6)));
 for i = 1:size(cst,1)
     %We only let a target contribute if it has an objective/constraint or
     %if we do not have specified objectives/constraints at all so far
-%     if isequal(cst{i,3},'TARGET') && (~isempty(cst{i,6}) || noObjOrConst)
+    if isequal(cst{i,3},'TARGET') && (~isempty(cst{i,6}) || noObjOrConst)
         V = [V;vertcat(cst{i,4}{:})];
-%     end
+    end
 end
 
 % Delete repeated indices, one voxel can belong to two VOIs, because

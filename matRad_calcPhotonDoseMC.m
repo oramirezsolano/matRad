@@ -38,7 +38,7 @@ if nargin < 6
 end
 
 if nargin < 5
-    nCasePerBixel = 1000;
+    nCasePerBixel = 100000;
 end
 
 fileFolder = fileparts(mfilename('fullpath'));

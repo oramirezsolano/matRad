@@ -20,10 +20,10 @@ clc
 % load patient data, i.e. ct, voi, cst
 
 % load HEAD_AND_NECK
-% load TG119.mat
+load TG119.mat
 % load PROSTATE.mat
 % load LIVER.mat
-load BOXPHANTOM.mat
+% load BOXPHANTOM.mat
 
 % meta information for treatment plan
 
@@ -34,8 +34,10 @@ pln.numOfFractions  = 30;
 
 % beam geometry settings
 pln.propStf.bixelWidth      = 5; % [mm] / also corresponds to lateral spot spacing for particles
-pln.propStf.gantryAngles    = [0:72:359]; % [?]
-pln.propStf.couchAngles     = [0 0 0 0 0]; % [?]
+% pln.propStf.gantryAngles    = [0:72:359]; % [?]
+% pln.propStf.couchAngles     = [0 0 0 0 0]; % [?]
+pln.propStf.gantryAngles    = [0];
+pln.propStf.couchAngles     = [0];
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
 
