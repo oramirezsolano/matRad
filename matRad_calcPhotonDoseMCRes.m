@@ -1,4 +1,4 @@
-function dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst,nCasePerBixel,visBool)
+function dij = matRad_calcPhotonDoseMC(file,ct,stf,pln,cst,nCasePerBixel,visBool)
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % matRad ompMC monte carlo photon dose calculation wrapper
 %
@@ -33,18 +33,19 @@ function dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst,nCasePerBixel,visBool)
 tic
 
 % disable visualiazation by default
-if nargin < 6
+if nargin < 7 % 6
     visBool = false;
 end
 
-if nargin < 5
-    nCasePerBixel = 1000;
+if nargin < 6 % 5
+    nCasePerBixel = 100; % 100000
 end
 
 fileFolder = fileparts(mfilename('fullpath'));
 
 %%
-if exist('omc_matrad','file') ~= 3    
+% if exist('matRad_ompInterface','file') ~= 3   
+if exist('omc_matrad','file') ~= 3
     try
         disp('Compiled interface not found. Compiling the ompMC interface on the fly!');
         %Make sure we compile in the right directory
@@ -193,7 +194,7 @@ ompMCoptions.verbose = true;
 
 % start MC control          
 ompMCoptions.nHistories = nCasePerBixel;
-ompMCoptions.nSplit = 20;
+ompMCoptions.nSplit = 1;
 ompMCoptions.nBatches = 10;
 ompMCoptions.randomSeeds = [97 33];
 
@@ -277,6 +278,11 @@ scale = 10; % to convert to cm
 ompMCgeo.xBounds = (dij.doseGrid.resolution.y * (0.5 + [0:dij.doseGrid.dimensions(1)])) ./ scale;
 ompMCgeo.yBounds = (dij.doseGrid.resolution.x * (0.5 + [0:dij.doseGrid.dimensions(2)])) ./ scale;
 ompMCgeo.zBounds = (dij.doseGrid.resolution.z * (0.5 + [0:dij.doseGrid.dimensions(3)])) ./ scale;
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+writePhantomMCRes(dij,material,ompMCgeo.xBounds,ompMCgeo.yBounds,ompMCgeo.zBounds,cubeRho,cubeMatIx,file);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% debug visualization
 if visBool
@@ -375,6 +381,10 @@ ompMCsource.zSide1 = bixelSide1(:,3);
 ompMCsource.xSide2 = bixelSide2(:,2);
 ompMCsource.ySide2 = bixelSide2(:,1);
 ompMCsource.zSide2 = bixelSide2(:,3);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writeBeamletfileMCRes(file,ompMCsource.nBeams,ompMCsource.nBixels,beamSource,ompMCsource.iBeam,bixelCorner,bixelSide1,bixelSide2);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if visBool
     plot3(ompMCsource.ySource,ompMCsource.xSource,ompMCsource.zSource,'rx')
