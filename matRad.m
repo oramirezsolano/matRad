@@ -1,7 +1,5 @@
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % matRad script
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Copyright 2015 the matRad development team. 
@@ -21,11 +19,11 @@ clc
 
 % load patient data, i.e. ct, voi, cst
 
-%load HEAD_AND_NECK
+% load HEAD_AND_NECK
 load TG119.mat
-%load PROSTATE.mat
-%load LIVER.mat
-%load BOXPHANTOM.mat
+% load PROSTATE.mat
+% load LIVER.mat
+% load BOXPHANTOM.mat
 
 % meta information for treatment plan
 
@@ -36,11 +34,17 @@ pln.numOfFractions  = 30;
 
 % beam geometry settings
 pln.propStf.bixelWidth      = 5; % [mm] / also corresponds to lateral spot spacing for particles
-pln.propStf.gantryAngles    = [0:72:359]; % [?]
-pln.propStf.couchAngles     = [0 0 0 0 0]; % [?]
+% pln.propStf.gantryAngles    = [0:72:359]; % [?]
+% pln.propStf.couchAngles     = [0 0 0 0 0]; % [?]
+pln.propStf.gantryAngles    = [0];
+pln.propStf.couchAngles     = [0];
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
 
+% dose calculation settings
+pln.propDoseCalc.doseGrid.resolution.x = 5; % [mm]
+pln.propDoseCalc.doseGrid.resolution.y = 5; % [mm]
+pln.propDoseCalc.doseGrid.resolution.z = 5; % [mm]
 
 % optimization settings
 pln.propOpt.bioOptimization = 'none'; % none: physical optimization;             const_RBExD; constant RBE of 1.1;
@@ -66,21 +70,21 @@ end
 resultGUI = matRad_fluenceOptimization(dij,cst,pln);
 
 %% sequencing
-if strcmp(pln.radiationMode,'photons') && (pln.propOpt.runSequencing || pln.propOpt.runDAO)
-    %resultGUI = matRad_xiaLeafSequencing(resultGUI,stf,dij,5);
-    %resultGUI = matRad_engelLeafSequencing(resultGUI,stf,dij,5);
-    resultGUI = matRad_siochiLeafSequencing(resultGUI,stf,dij,5);
-end
+% if strcmp(pln.radiationMode,'photons') && (pln.propOpt.runSequencing || pln.propOpt.runDAO)
+%     %resultGUI = matRad_xiaLeafSequencing(resultGUI,stf,dij,5);
+%     %resultGUI = matRad_engelLeafSequencing(resultGUI,stf,dij,5);
+%     resultGUI = matRad_siochiLeafSequencing(resultGUI,stf,dij,5);
+% end
 
 %% DAO
-if strcmp(pln.radiationMode,'photons') && pln.propOpt.runDAO
-   resultGUI = matRad_directApertureOptimization(dij,cst,resultGUI.apertureInfo,resultGUI,pln);
-   matRad_visApertureInfo(resultGUI.apertureInfo);
-end
+% if strcmp(pln.radiationMode,'photons') && pln.propOpt.runDAO
+%    resultGUI = matRad_directApertureOptimization(dij,cst,resultGUI.apertureInfo,resultGUI,pln);
+%    matRad_visApertureInfo(resultGUI.apertureInfo);
+% end
 
 %% start gui for visualization of result
 matRadGUI
 
 %% indicator calculation and show DVH and QI
-[dvh,qi] = matRad_indicatorWrapper(cst,pln,resultGUI);
+% [dvh,qi] = matRad_indicatorWrapper(cst,pln,resultGUI);
 

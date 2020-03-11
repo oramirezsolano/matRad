@@ -1,0 +1,5 @@
+*.ini
+*.beamlet
+*.egsphant
+matRad_example4_photonsMC.m
+submodules/ompMC/*
