@@ -19,10 +19,10 @@ matRad_rc
 % load patient data, i.e. ct, voi, cst
 
 % load HEAD_AND_NECK
-load TG119.mat
+% load TG119.mat
 % load PROSTATE.mat
-%load LIVER.mat
-% load BOXPHANTOM.mat
+% load LIVER.mat
+load BOXPHANTOM.mat
 
 % meta information for treatment plan
 
@@ -32,9 +32,9 @@ pln.machine         = 'Generic';
 pln.numOfFractions  = 1;
 
 % beam geometry settings
-pln.propStf.bixelWidth      = 50; % [mm] / also corresponds to lateral spot spacing for particles
-pln.propStf.gantryAngles    = 90; % [?]
-pln.propStf.couchAngles     = 90; % [?]
+pln.propStf.bixelWidth      = 20; % [mm] / also corresponds to lateral spot spacing for particles
+pln.propStf.gantryAngles    = 0; % [?]
+pln.propStf.couchAngles     = 0; % [?]
 pln.propStf.numOfBeams      = numel(pln.propStf.gantryAngles);
 pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1) * matRad_getIsoCenter(cst,ct,0);
 % pln.propStf.isoCenter       = ones(pln.propStf.numOfBeams,1);
@@ -82,10 +82,33 @@ fprintf('final SSD = %f\n',stf.ray.SSD);
 
 %% dose calculation with ompMC
 % dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst,1e7); % nhist = 1e7
-dij = matRad_calcPhotonDoseMC(ct,stf,pln,cst);
+dij_mc = matRad_calcPhotonDoseMC(ct,stf,pln,cst);
+dij = matRad_calcPhotonDose(ct,stf,pln,cst);
 
+resultGUI_mc = matRad_calcCubes(1,dij_mc);
 resultGUI = matRad_calcCubes(1,dij);
+% resultGUI = matRad_calcDoseDirect(ct,stf,pln,cst,1);
+
+%%
+% plot(dij.ctGrid.x(1,:),resultGUI.physicalDose(:,84,65));
+plot(dij.ctGrid.x(1,:),(squeeze(resultGUI.physicalDose(80,80,:))/max(resultGUI.physicalDose(80,80,:))));
+hold on
+% plot(dij.ctGrid.x(1,:),resultGUI_mc.physicalDose(:,84,65));
+plot(dij.ctGrid.x(1,:),(squeeze(resultGUI_mc.physicalDose(80,80,:))/max(resultGUI_mc.physicalDose(80,80,:))));
+
+%%
+% plot(dij.ctGrid.x(1,:),resultGUI.physicalDose(:,84,65));
+plot(dij.ctGrid.y(1,:),(resultGUI.physicalDose(:,80,80)/max(resultGUI.physicalDose(:,80,80))));
+hold on
+% plot(dij.ctGrid.x(1,:),resultGUI_mc.physicalDose(:,84,65));
+plot(dij.ctGrid.y(1,:),(resultGUI_mc.physicalDose(:,80,80)/max(resultGUI_mc.physicalDose(:,80,80))));
+
+%%
+plot(dij.ctGrid.z(1,:),(squeeze(resultGUI.physicalDose(80,80,:))/max(resultGUI.physicalDose(80,80,:))));
+hold on
+% plot(dij.ctGrid.x(1,:),resultGUI_mc.physicalDose(:,84,65));
+plot(dij.ctGrid.z(1,:),(squeeze(resultGUI_mc.physicalDose(80,80,:))/max(resultGUI_mc.physicalDose(80,80,:))));
 
 %% start gui for visualization of result
-matRadGUI
+% matRadGUI
 
