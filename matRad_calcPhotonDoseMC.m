@@ -386,7 +386,8 @@ end
 % show busy state
 %set(figureWait,'pointer','watch');
 
-absCalibrationFactor = 1e12 / 2.633; %Not fully validated!
+% absCalibrationFactor = 1e12 / 2.633; %Not fully validated!
+absCalibrationFactor = 5*5;
 
 fprintf('matRad: OmpMC photon dose calculation... \n');
 

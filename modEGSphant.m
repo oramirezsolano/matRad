@@ -2,11 +2,11 @@ clc; clear;
 tic
 
 % Open EGS phantom file and create output file
-file = 'HEAD_AND_NECK';
+% file = 'HEAD_AND_NECK';
 % file = 'TG119';
 % file = 'PROSTATE';
 % file = 'LIVER';
-% file = 'BOXPHANTOM';
+file = 'BOXPHANTOM';
 
 load(strcat(file,'.mat'));
 
